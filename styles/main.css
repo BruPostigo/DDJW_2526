@@ -1,16 +1,42 @@
-#title, .center{
+body {
+	background-color: #2c3e50; 
+	font-family: Arial, sans-serif;
+}
+
+#title, .center {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
 }
 
-button.center{
-	width: 6rem;
-	height: 3rem;
-	margin-top: 1rem;
+#title {
+	color: #f1c40f; 
+	text-align: center;
+	text-shadow: 2px 2px 5px black;
+	font-size: 3rem;
+	padding-top: 2rem;
 }
 
-#title{
-	color:red;
-	text-align: center;
+button.center {
+	width: 10rem;
+	height: 3.5rem;
+	margin-top: 1rem;
+	background-color: #ecf0f1;
+	border: 2px solid #bdc3c7;
+	border-radius: 8px; 
+	font-size: 1.2rem;
+	font-weight: bold;
+	cursor: pointer;
+	transition: all 0.2s; 
+}
+
+button.center:hover {
+	background-color: #3498db;
+	color: white;
+	border-color: #2980b9;
+}
+
+button.center:active {
+	transform: scale(0.95); 
+	background-color: #2980b9;
 }
