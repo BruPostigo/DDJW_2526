@@ -5,7 +5,11 @@ let imgRevers;
 let imgAnvers = [];
 let cartesGiradesTemporalment = [];
 let bloqueigTauler = false;
+
 let midaGrup = 2;
+let modeJoc = 1;
+let nivellActual = 1;
+let punts = 0;
 
 function crearImatgeSVG(svgString) {
     const blob = new Blob([svgString], { type: 'image/svg+xml' });
@@ -24,41 +28,62 @@ export function iniciarJocCanvas(configuracio) {
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     
-    // Si no ens arriba configuració, posem la de per defecte
-    midaGrup = configuracio ? configuracio.midaGrup : 2; 
-    let numCartes = configuracio ? configuracio.numCartes : 12;
-
+    modeJoc = configuracio ? configuracio.mode : 1;
     cartesGiradesTemporalment = [];
     bloqueigTauler = false;
     carregarImatges();
 
     setTimeout(() => {
-        generarTaulerProva(numCartes);
-        dibuixarTauler(canvas, ctx);
-        configurarClics(canvas, ctx);
+        if (modeJoc === 2) {
+            nivellActual = 1;
+            punts = 0;
+            prepararNivell(canvas, ctx);
+        } else {
+            midaGrup = configuracio.midaGrup;
+            generarTaulerProva(configuracio.numCartes);
+            dibuixarTauler(canvas, ctx);
+            configurarClics(canvas, ctx);
+        }
     }, 100);
+}
+
+
+function prepararNivell(canvas, ctx) {
+    let cartesNivell = 12;
+    if (nivellActual === 1) { midaGrup = 2; cartesNivell = 12; }
+    else if (nivellActual === 2) { midaGrup = 3; cartesNivell = 12; }
+    else if (nivellActual === 3) { midaGrup = 2; cartesNivell = 24; }
+    else if (nivellActual === 4) { midaGrup = 3; cartesNivell = 24; }
+    else {
+        alert(`Felicitats! Has completat tots els nivells amb ${punts} punts!`);
+        document.getElementById('pantalla-joc').style.display = 'none';
+        document.getElementById('pantalla-menu').style.display = 'block';
+        return;
+    }
+
+    cartesGiradesTemporalment = [];
+    generarTaulerProva(cartesNivell);
+    dibuixarTauler(canvas, ctx);
+    configurarClics(canvas, ctx);
 }
 
 function generarTaulerProva(numCartesTotal) {
     tauler = [];
     let idCartes = [];
     let numDibuixos = numCartesTotal / midaGrup;
-    
     for (let i = 0; i < numDibuixos; i++) {
         for (let j = 0; j < midaGrup; j++) {
             idCartes.push(i % dissenysCartes.length); 
         }
     }
     idCartes.sort(() => Math.random() - 0.5);
-
-    // --- MILLORA DE DISSENY: Cartes més petites si n'hi ha 24 ---
     let columnes = numCartesTotal === 12 ? 4 : 6;
-    let ampleCarta = numCartesTotal === 12 ? 100 : 80;
-    let altCarta = numCartesTotal === 12 ? 150 : 120;
-    let espai = 15;
-    let margeX = (800 - (columnes * (ampleCarta + espai))) / 2;
-    let margeY = 50;
-    
+    let ampleCarta = numCartesTotal === 12 ? 100 : 75; 
+    let altCarta = numCartesTotal === 12 ? 150 : 110; 
+    let espai = numCartesTotal === 12 ? 20 : 12;     
+    let ampleTotal = (columnes * ampleCarta) + ((columnes - 1) * espai);
+    let margeX = (800 - ampleTotal) / 2;
+    let margeY = numCartesTotal === 12 ? 80 : 60; 
     let index = 0;
     for (let i = 0; index < idCartes.length; i++) {
         for (let j = 0; j < columnes && index < idCartes.length; j++) {
@@ -78,6 +103,14 @@ function generarTaulerProva(numCartesTotal) {
 
 function dibuixarTauler(canvas, ctx) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = "black";
+    ctx.font = "20px Arial";
+    if (modeJoc === 2) {
+        ctx.fillText(`Nivell: ${nivellActual}`, 20, 30);
+    }
+    ctx.fillText(`Punts: ${punts}`, 650, 30);
+
     tauler.forEach(carta => {
         if (carta.girada || carta.resolta) {
             ctx.drawImage(imgAnvers[carta.id], carta.x, carta.y, carta.width, carta.height);
@@ -119,13 +152,35 @@ function comprovarGrup(canvas, ctx) {
     if (totesIguals) {
         cartesGiradesTemporalment.forEach(carta => carta.resolta = true);
         cartesGiradesTemporalment = []; 
+        punts += 10;
+        dibuixarTauler(canvas, ctx);
         bloqueigTauler = false; 
+        
+        comprovarVictoria(canvas, ctx); 
     } else {
+        punts = Math.max(0, punts - 2); 
         setTimeout(() => {
             cartesGiradesTemporalment.forEach(carta => carta.girada = false);
             cartesGiradesTemporalment = [];
             dibuixarTauler(canvas, ctx);
             bloqueigTauler = false;
         }, 800);
+    }
+}
+
+function comprovarVictoria(canvas, ctx) {
+    const totesResoltes = tauler.every(carta => carta.resolta);
+    if (totesResoltes) {
+        if (modeJoc === 2) {
+            nivellActual++;
+            setTimeout(() => {
+                alert(`Nivell completat! Preparat per al Nivell ${nivellActual}?`);
+                prepararNivell(canvas, ctx);
+            }, 500);
+        } else {
+            setTimeout(() => {
+                alert(`Has guanyat! Puntuació final: ${punts}`);
+            }, 500);
+        }
     }
 }

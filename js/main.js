@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pantallaOpcions = document.getElementById('pantalla-opcions'); 
     
     const btnJugar = document.getElementById('btn-jugar');
+    const btnJugarMode2 = document.getElementById('btn-jugar-mode2'); // BOTÓ NOU
     const btnOpcions = document.getElementById('btn-opcions');
     const btnGuardarOpcions = document.getElementById('btn-guardar-opcions'); 
     const btnPuntuacions = document.getElementById('btn-puntuacions');
@@ -14,14 +15,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let configuracioJoc = {
         midaGrup: 2,
-        numCartes: 12
+        numCartes: 12,
+        mode: 1 
     };
 
     btnJugar.addEventListener('click', () => {
         pantallaMenu.style.display = 'none';
         pantallaJoc.style.display = 'block';
-        console.log(configuracioJoc);
+        configuracioJoc.mode = 1;
         iniciarJocCanvas(configuracioJoc); 
+    });
+
+    btnJugarMode2.addEventListener('click', () => {
+        pantallaMenu.style.display = 'none';
+        pantallaJoc.style.display = 'block';
+        let configMode2 = { mode: 2, midaGrup: 2, numCartes: 12 };
+        iniciarJocCanvas(configMode2);
     });
 
     btnOpcions.addEventListener('click', () => {
@@ -32,16 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
     btnGuardarOpcions.addEventListener('click', () => {
         configuracioJoc.midaGrup = parseInt(document.getElementById('mida-grup').value);
         configuracioJoc.numCartes = parseInt(document.getElementById('num-cartes').value);
-        
         pantallaOpcions.style.display = 'none';
         pantallaMenu.style.display = 'block';
     });
 
-    btnPuntuacions.addEventListener('click', () => {
-        alert("Puntuacions: properament");
-    });
-
-    btnCarregar.addEventListener('click', () => {
-        alert("Carregar: properament");
-    });
+    btnPuntuacions.addEventListener('click', () => { alert("Puntuacions: properament"); });
+    btnCarregar.addEventListener('click', () => { alert("Carregar: properament"); });
 });

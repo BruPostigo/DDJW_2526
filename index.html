@@ -9,16 +9,38 @@
     <div id="pantalla-menu">
         <h1>Memory Game</h1>
         <div class="botons-menu">
-            <button id="btn-jugar">Jugar</button>
+            <button id="btn-jugar">Jugar (Mode 1)</button>
+            <button id="btn-jugar-mode2" style="background-color: #e74c3c;">Jugar Mode 2 (Nivells)</button>
             <button id="btn-opcions">Opcions</button>
             <button id="btn-puntuacions">Puntuacions</button>
             <button id="btn-carregar">Carregar Partida</button>
         </div>
     </div>
 
+    <div id="pantalla-opcions" style="display: none;">
+        <h2>Opcions del Joc</h2>
+        <div class="botons-menu">
+            <label for="mida-grup" style="color: white; font-size: 1.2em;">Mida del grup:</label>
+            <select id="mida-grup" style="padding: 10px; font-size: 1.1em; border-radius: 5px;">
+                <option value="2">Parelles</option>
+                <option value="3">Trios</option>
+                <option value="4">Quartets</option>
+            </select>
+            
+            <label for="num-cartes" style="color: white; font-size: 1.2em; margin-top: 15px;">Número de cartes:</label>
+            <select id="num-cartes" style="padding: 10px; font-size: 1.1em; border-radius: 5px;">
+                <option value="12">12 Cartes</option>
+                <option value="24">24 Cartes</option>
+            </select>
+            
+            <button id="btn-guardar-opcions" style="margin-top: 20px;">Tornar al Menú</button>
+        </div>
+    </div>
+
     <div id="pantalla-joc" style="display: none;">
         <canvas id="gameCanvas" width="800" height="600" style="border: 1px solid black;"></canvas>
     </div>
-	<script type="module" src="js/main.js"></script>
+
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>
