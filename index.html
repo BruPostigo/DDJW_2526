@@ -1,16 +1,23 @@
-<!DOCTYPE html> 
-<html>
-	<head>
-		<script src="./js/main.js"></script>
-		<link rel="stylesheet" 
-			href="./styles/main.css">
-		<title> Memory - Menú </title>
-	</head>
-	<body>
-		<h1 id="title">Menú</h1>
-		<button id="play" class="center"> Jugar </button>
-		<button id="options" class="center"> Opcions </button>
-		<button id="saves" class="center"> Partides </button>
-		<button id="exit" class="center"> Sortir </button>
-	</body>
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>Memory - Treball Individual</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="pantalla-menu">
+        <h1>Memory Game</h1>
+        <div class="botons-menu">
+            <button id="btn-jugar">Jugar</button>
+            <button id="btn-opcions">Opcions</button>
+            <button id="btn-puntuacions">Puntuacions</button>
+            <button id="btn-carregar">Carregar Partida</button>
+        </div>
+    </div>
+
+    <div id="pantalla-joc" style="display: none;">
+        <canvas id="gameCanvas" width="800" height="600" style="border: 1px solid black;"></canvas>
+    </div>
+</body>
 </html>
