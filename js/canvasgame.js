@@ -24,6 +24,53 @@ function carregarImatges() {
     imgAnvers = dissenysCartes.map(dibuix => crearImatgeSVG(dibuix));
 }
 
+
+function guardarLocal() {
+    let taulerNet = JSON.parse(JSON.stringify(tauler));
+    taulerNet.forEach(c => {
+        if (!c.resolta) c.girada = false;
+    });
+
+    const partida = {
+        tauler: taulerNet,
+        midaGrup: midaGrup,
+        modeJoc: modeJoc,
+        nivellActual: nivellActual,
+        punts: punts
+    };
+    localStorage.setItem('memoryPartida', JSON.stringify(partida));
+}
+
+
+export function carregarPartidaCanvas() {
+    let dades = localStorage.getItem('memoryPartida');
+    if (!dades) {
+        alert("No hi ha cap partida guardada prèviament!");
+        return false;
+    }
+
+    let partida = JSON.parse(dades);
+    tauler = partida.tauler;
+    midaGrup = partida.midaGrup;
+    modeJoc = partida.modeJoc;
+    nivellActual = partida.nivellActual;
+    punts = partida.punts;
+    
+    cartesGiradesTemporalment = [];
+    bloqueigTauler = false;
+    
+    carregarImatges();
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    setTimeout(() => {
+        dibuixarTauler(canvas, ctx);
+        configurarClics(canvas, ctx);
+    }, 100);
+    
+    return true;
+}
+
 export function iniciarJocCanvas(configuracio) {
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -43,10 +90,10 @@ export function iniciarJocCanvas(configuracio) {
             generarTaulerProva(configuracio.numCartes);
             dibuixarTauler(canvas, ctx);
             configurarClics(canvas, ctx);
+            guardarLocal(); 
         }
     }, 100);
 }
-
 
 function prepararNivell(canvas, ctx) {
     let cartesNivell = 12;
@@ -65,6 +112,7 @@ function prepararNivell(canvas, ctx) {
     generarTaulerProva(cartesNivell);
     dibuixarTauler(canvas, ctx);
     configurarClics(canvas, ctx);
+    guardarLocal(); 
 }
 
 function generarTaulerProva(numCartesTotal) {
@@ -77,13 +125,16 @@ function generarTaulerProva(numCartesTotal) {
         }
     }
     idCartes.sort(() => Math.random() - 0.5);
+
     let columnes = numCartesTotal === 12 ? 4 : 6;
-    let ampleCarta = numCartesTotal === 12 ? 100 : 75; 
-    let altCarta = numCartesTotal === 12 ? 150 : 110; 
-    let espai = numCartesTotal === 12 ? 20 : 12;     
+    let ampleCarta = numCartesTotal === 12 ? 100 : 75;
+    let altCarta = numCartesTotal === 12 ? 150 : 110;
+    let espai = numCartesTotal === 12 ? 20 : 12;
+
     let ampleTotal = (columnes * ampleCarta) + ((columnes - 1) * espai);
     let margeX = (800 - ampleTotal) / 2;
     let margeY = numCartesTotal === 12 ? 80 : 60; 
+    
     let index = 0;
     for (let i = 0; index < idCartes.length; i++) {
         for (let j = 0; j < columnes && index < idCartes.length; j++) {
@@ -152,7 +203,8 @@ function comprovarGrup(canvas, ctx) {
     if (totesIguals) {
         cartesGiradesTemporalment.forEach(carta => carta.resolta = true);
         cartesGiradesTemporalment = []; 
-        punts += 10;
+        punts += 10; 
+        guardarLocal(); 
         dibuixarTauler(canvas, ctx);
         bloqueigTauler = false; 
         
