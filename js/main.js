@@ -1,3 +1,4 @@
+import { iniciarJocCanvas } from './canvasgame.js';
 document.addEventListener('DOMContentLoaded', () => {
     
     const pantallaMenu = document.getElementById('pantalla-menu');
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pantallaMenu.style.display = 'none';
         pantallaJoc.style.display = 'block';
         console.log("Iniciant la partida... Carregant Canvas.");
+		iniciarJocCanvas();
     });
 
     btnOpcions.addEventListener('click', () => {
